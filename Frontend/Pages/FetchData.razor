@@ -1,0 +1,41 @@
+﻿@page "/fetchdata"
+
+@using Frontend.Data
+@using TeamRedWebApi.Models.RealEstateModel
+
+@inject CustomHttpClient Http
+
+<h1>Alla Fastigheter Tillängliga</h1>
+
+@if (Realestates == null)
+{
+    <p><em>Laddar in fastigheter..</em></p>
+}
+else
+{
+<section id="RealEstates">
+    <div class="row">
+        @foreach (var realestate in Realestates)
+        {
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <img class="card-img-top" src="https://i.gyazo.com/aa12d509b2c67f2dbc2bbe8f46b9417d.png" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">@realestate.Title</h5>
+                        <p class="card-text-">@realestate.Description<br />@realestate.Address<br />@realestate.PurchasePrice kr</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    </section>
+}
+
+@code {
+    private List<RealEstateDto> Realestates;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Realestates = await Http.GetJsonAsync<List<RealEstateDto>>("http://localhost:5000/api/RealEstates"); 
+    }
+}
